@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart' ;
-import 'package:flutter/services.dart';
 import 'package:my_app/services/world_time.dart';
 
 class Loading extends StatefulWidget {
@@ -17,7 +16,6 @@ class _LoadingState extends State<Loading> {
   }
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setupWorldTime();
 
