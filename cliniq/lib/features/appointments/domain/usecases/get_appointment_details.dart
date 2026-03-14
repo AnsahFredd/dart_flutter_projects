@@ -6,7 +6,7 @@ class GetAppointmentDetails {
 
   GetAppointmentDetails(this.repository);
 
-  Future<Appointment> call(Appointment appointment) {
-    return repository.getAppointmentById(appointment.id);
+  Future<Appointment> call(String id) {
+    return repository.getAppointmentById(id);
   }
 }

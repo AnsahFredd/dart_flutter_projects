@@ -1,4 +1,5 @@
 import 'package:cliniq/core/theme/app_colors.dart';
+import 'package:cliniq/features/appointments/presentation/screens/appointment_page.dart';
 import 'package:cliniq/features/home/presentation/screens/home_screen.dart';
 import 'package:cliniq/features/medical_records/presentation/pages/reports_history_page.dart';
 import 'package:cliniq/features/messages/presentation/screens/messages_screen.dart';
@@ -23,18 +24,26 @@ class _MainScreenState extends State<MainScreen> {
           _currentPageIndex = index;
         }),
       ),
-      // const AppointmentsListPage(),
+      const AppointmentPage(),
       const ReportsHistoryPage(),
       const MessagesScreen(),
       const ProfileScreen(),
     ];
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       body: screens[_currentPageIndex],
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+              blurRadius: 20,
+              offset: const Offset(0, -5),
+            ),
+          ],
         ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -43,19 +52,19 @@ class _MainScreenState extends State<MainScreen> {
             _currentPageIndex = index;
           }),
           selectedItemColor: AppColors.secondary,
-          unselectedItemColor: const Color(0xFF9E9EAE),
+          unselectedItemColor: isDark ? Colors.white38 : const Color(0xFF9E9EAE),
           showUnselectedLabels: true,
           selectedLabelStyle: const TextStyle(
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
             fontSize: 12,
           ),
           unselectedLabelStyle: const TextStyle(
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
             fontSize: 12,
           ),
-          iconSize: 28,
+          iconSize: 26,
           elevation: 0,
-          backgroundColor: const Color(0xFFF5F0FF),
+          backgroundColor: theme.colorScheme.surface,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),

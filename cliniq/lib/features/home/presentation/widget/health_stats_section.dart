@@ -1,5 +1,6 @@
 import 'package:cliniq/features/home/presentation/widget/blood_pressure_card.dart';
 import 'package:cliniq/features/home/presentation/widget/health_rate_card.dart';
+import 'package:cliniq/shared/widget/section_header.dart';
 import 'package:flutter/material.dart';
 
 class HealthStatsSection extends StatelessWidget {
@@ -7,25 +8,27 @@ class HealthStatsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Heath Statistics", style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold
-          ),),
-          SizedBox(height: 7,),
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(
+          title: "Health Statistics",
+          showAction: true,
+          actionText: "Check Up",
+          onActionPressed: () {},
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24),
+          child: Row(
             children: [
-              Expanded(child: IntrinsicHeight(child: HealthRateCard())),
-              const SizedBox(width: 12),
-              Expanded(child: IntrinsicHeight(child: BloodPressureCard())),
+              Expanded(child: HealthRateCard()),
+              SizedBox(width: 16),
+              Expanded(child: BloodPressureCard()),
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
+

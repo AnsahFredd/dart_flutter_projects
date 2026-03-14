@@ -1,4 +1,5 @@
 import 'package:cliniq/core/theme/app_colors.dart';
+import 'package:cliniq/core/theme/app_text.dart';
 import 'package:flutter/material.dart';
 
 class StepsCountCard extends StatelessWidget {
@@ -6,92 +7,109 @@ class StepsCountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20), // ← space left/right
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(32),
+          border: Border.all(color: isDark ? Colors.white12 : AppColors.border.withValues(alpha: 0.5)),
+          boxShadow: isDark ? [] : [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
+              color: AppColors.secondary.withValues(alpha: 0.05),
+              blurRadius: 30,
+              offset: const Offset(0, 15),
             ),
           ],
-          borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.assist_walker, color: AppColors.secondary, size: 16),
-                    const SizedBox(width: 4),
-                    Text(
-                      "STEPS COUNT",
-                      style: TextStyle(
-                        color: AppColors.secondary,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.8,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.secondary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.directions_walk_rounded,
+                          color: AppColors.secondary,
+                          size: 20,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 8),
-
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "7,432",
-                      style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(width: 4),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 3),
-                      child: Text(
+                      const SizedBox(width: 12),
+                      Text(
+                        "Step Count",
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        "7,432",
+                        style: theme.textTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
                         "steps",
-                        style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: isDark ? Colors.white38 : AppColors.textHint,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+            const SizedBox(width: 20),
+            Stack(
+              alignment: Alignment.center,
               children: [
-                Text(
-                  "Daily Goal: 10k",
-                  style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
+                SizedBox(
+                  width: 80,
+                  height: 80,
+                  child: CircularProgressIndicator(
+                    value: 0.74,
+                    strokeWidth: 10,
+                    strokeCap: StrokeCap.round,
+                    backgroundColor: isDark ? Colors.white10 : AppColors.secondaryLight,
+                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.secondary),
+                  ),
                 ),
-                const SizedBox(height: 8),
-                Stack(
-                  alignment: Alignment.center,
+                Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(
-                      width: 56,
-                      height: 56,
-                      child: CircularProgressIndicator(
-                        value: 0.74,
-                        strokeWidth: 6,
-                        backgroundColor: Colors.grey.shade300,
-                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.secondary),
-                      ),
-                    ),
                     Text(
                       "74%",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
                         color: AppColors.secondary,
+                      ),
+                    ),
+                    Text(
+                      "Goal",
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                   ],
@@ -103,4 +121,4 @@ class StepsCountCard extends StatelessWidget {
       ),
     );
   }
-}
+}

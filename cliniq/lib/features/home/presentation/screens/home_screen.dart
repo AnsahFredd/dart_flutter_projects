@@ -1,3 +1,4 @@
+import 'package:cliniq/core/theme/app_colors.dart';
 import 'package:cliniq/features/home/presentation/widget/health_stats_section.dart';
 import 'package:cliniq/features/home/presentation/widget/home_header.dart';
 import 'package:cliniq/features/home/presentation/widget/quick_action_section.dart';
@@ -19,17 +20,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
-              HomeHeader(),
+              const HomeHeader(),
               QuickActionSection(onNavigate: widget.onNavigate),
+              const SizedBox(height: 12),
+              const UpcomingAppointmentSection(),
+              const SizedBox(height: 12),
+              const HealthStatsSection(),
+              const SizedBox(height: 24),
+              const StepsCountCard(),
               const SizedBox(height: 40),
-              UpcomingAppointmentSection(),
-              const SizedBox(height: 30,),
-              HealthStatsSection(),
-              const SizedBox(height: 20,),
-              StepsCountCard(),
-              SizedBox(height: 50,)
             ],
           ),
         ),
@@ -37,3 +39,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+

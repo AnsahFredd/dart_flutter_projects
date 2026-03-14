@@ -1,5 +1,4 @@
 import 'package:cliniq/features/appointments/data/datasources/appointment_remote_data_source.dart';
-import 'package:cliniq/features/appointments/data/models/appointment_model.dart';
 import 'package:cliniq/features/appointments/domain/entities/appointment.dart';
 import 'package:cliniq/features/appointments/domain/repositories/appointment_repository.dart';
 
@@ -24,7 +23,7 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
   }
 
   @override
-  Future<AppointmentModel> getAppointmentById(String id) {
+  Future<Appointment> getAppointmentById(String id) {
     return remoteDataSource.getAppointmentById(id);
   }
 }

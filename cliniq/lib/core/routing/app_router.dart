@@ -1,4 +1,8 @@
 import 'package:cliniq/core/routing/routes.dart';
+import 'package:cliniq/features/appointments/domain/entities/appointment.dart';
+import 'package:cliniq/features/appointments/presentation/screens/appointment_page.dart';
+import 'package:cliniq/features/appointments/presentation/screens/appointments_list_page.dart';
+import 'package:cliniq/features/appointments/presentation/screens/booking_success_page.dart';
 import 'package:cliniq/features/auth/presentation/screens/login_screen.dart';
 import 'package:cliniq/features/auth/presentation/screens/register_screen.dart';
 import 'package:cliniq/features/auth/presentation/screens/reset_passwrod_screen.dart';
@@ -32,18 +36,32 @@ class AppRouter {
       case Routes.maainScreen:
         return MaterialPageRoute(builder: (_) => const MainScreen());
       case Routes.appointments:
-        // return MaterialPageRoute(builder: (_) => const AppointmentsListPage());
+        final args = settings.arguments as Appointment;
+        return MaterialPageRoute(
+          builder: (_) => AppointmentsListPage(
+            doctorName: args.doctorName,
+            speciality: args.speciality,
+            hospital: args.hospital,
+            image: args.image,
+            rating: args.rating,
+          ),
+        );
+        case Routes.appointmentDetails:
+        return MaterialPageRoute(builder: (_) => AppointmentPage());
+      case Routes.bookingSuccess:
+        final args = settings.arguments as Appointment;
+        return MaterialPageRoute(builder: (_) => BookingSuccessPage(appointment: args));
       case Routes.profile:
         return MaterialPageRoute(builder: (_) => const ProfileScreen());
       case Routes.medicalrecords:
         return MaterialPageRoute(builder: (_) => const ReportsHistoryPage());
       case Routes.notifications:
         return MaterialPageRoute(builder: (_) => const NotificationsPage());
-        case Routes.messages:
+      case Routes.messages:
         return MaterialPageRoute(builder: (_) => const MessagesScreen());
-        case Routes.emergency:
+      case Routes.emergency:
         return MaterialPageRoute(builder: (_) => const EmergencyScreen());
-        case Routes.finddoctor:
+      case Routes.finddoctor:
         return MaterialPageRoute(builder: (_) => const FindDoctor());
       default:
         return MaterialPageRoute(

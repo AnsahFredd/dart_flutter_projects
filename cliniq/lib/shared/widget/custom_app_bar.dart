@@ -1,3 +1,5 @@
+import 'package:cliniq/core/theme/app_colors.dart';
+import 'package:cliniq/core/theme/app_text.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -5,55 +7,55 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.title,
     this.leftIconData,
-    this.rightIconData,
+    this.rightWidget,
     this.leftIconColor,
-    this.rightIconColor,
     this.onLeftPressed,
-    this.onRightPressed,
   });
 
   final String title;
-
-  // Use IconData for safety and reusability
   final IconData? leftIconData;
-  final IconData? rightIconData;
-
-  // Optional colors for icons
+  final Widget? rightWidget;
   final Color? leftIconColor;
-  final Color? rightIconColor;
-
   final VoidCallback? onLeftPressed;
-  final VoidCallback? onRightPressed;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
       scrolledUnderElevation: 0,
-      backgroundColor: Colors.white,
       leading: leftIconData != null
-          ? IconButton(
-              onPressed: onLeftPressed ?? () {},
-              icon: Icon(leftIconData, color: leftIconColor),
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                onPressed: onLeftPressed ?? () => Navigator.pop(context),
+                style: IconButton.styleFrom(
+                  backgroundColor: AppColors.surface,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: const BorderSide(color: AppColors.border),
+                  ),
+                ),
+                icon: Icon(
+                  leftIconData, 
+                  color: leftIconColor ?? AppColors.textPrimary,
+                  size: 18,
+                ),
+              ),
             )
           : null,
-
-      // Title of the AppBar
-      title: Text(title),
+      title: Text(
+        title,
+        style: AppText.titleLarge.copyWith(fontWeight: FontWeight.w800),
+      ),
       centerTitle: true,
-      elevation: 0,
-
-      // Right-side icon (optional)
-      actions: rightIconData != null
-          ? [
-              IconButton(
-                onPressed: onRightPressed ?? () {},
-                icon: Icon(rightIconData, color: rightIconColor),
-              )
-            ]
-          : [],
+      actions: [
+        if (rightWidget != null) rightWidget!,
+        const SizedBox(width: 8),
+      ],
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
+  Size get preferredSize => const Size.fromHeight(64);
+}

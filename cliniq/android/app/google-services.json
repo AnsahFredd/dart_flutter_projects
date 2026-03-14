@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1023555473955",
+    "project_id": "cliniq-10039",
+    "storage_bucket": "cliniq-10039.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023555473955:android:4cd57a4e8bdb0472611796",
+        "android_client_info": {
+          "package_name": "com.example.cliniq"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023555473955-jb94tn578kl8472tde3jort5qlgqeiut.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzyfDJwWXtzMXpZ5yNjkxvgg7Ogc19kR4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1023555473955-jb94tn578kl8472tde3jort5qlgqeiut.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1023555473955-qh97o2hde9ejvirjf92sl6vlmt78dpit.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cliniq"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

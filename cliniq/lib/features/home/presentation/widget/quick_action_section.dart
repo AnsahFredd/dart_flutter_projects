@@ -1,5 +1,6 @@
 import 'package:cliniq/core/routing/routes.dart';
 import 'package:cliniq/core/theme/app_colors.dart';
+import 'package:cliniq/core/theme/app_text.dart';
 import 'package:flutter/material.dart';
 
 class QuickActionSection extends StatelessWidget {
@@ -9,36 +10,38 @@ class QuickActionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-         
-              _QuickActionItem(
-                icon: Icons.calendar_today_outlined,
-                label: "Appointments",
-                color: AppColors.secondary,
-                onTap: () => onNavigate(1),
-              ),
-      
-              _QuickActionItem(
-                icon: Icons.description_outlined,
-                label: "My Records",
-                color: AppColors.secondary,
-                onTap: () => onNavigate(2),
-              ),
-              _QuickActionItem(
-                icon: Icons.emergency_outlined,
-                label: "Emergency",
-                color: Colors.red,
-                onTap: () => Navigator.pushNamed(context, Routes.emergency),
-              ),
-              _QuickActionItem(
-                icon: Icons.person_outline,
-                label: "Find Doctor",
-                color: AppColors.secondary,
-                onTap: () => Navigator.pushNamed(context, Routes.finddoctor),
-              ),
+          _QuickActionItem(
+            icon: Icons.calendar_month_rounded,
+            label: "Schedule",
+            gradient: AppColors.secondaryGradient,
+            onTap: () => onNavigate(1),
+          ),
+          _QuickActionItem(
+            icon: Icons.description_rounded,
+            label: "Records",
+            gradient: AppColors.primaryGradient,
+            onTap: () => onNavigate(2),
+          ),
+          _QuickActionItem(
+            icon: Icons.person_search_rounded,
+            label: "Find Dr",
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFFFB923C), Color(0xFFF97316)],
+            ),
+            onTap: () => Navigator.pushNamed(context, Routes.finddoctor),
+          ),
+          _QuickActionItem(
+            icon: Icons.emergency_rounded,
+            label: "SOS",
+            gradient: AppColors.emergencyGradient,
+            onTap: () => Navigator.pushNamed(context, Routes.emergency),
+          ),
         ],
       ),
     );
@@ -49,37 +52,51 @@ class _QuickActionItem extends StatelessWidget {
   const _QuickActionItem({
     required this.icon,
     required this.label,
-    required this.color,
+    required this.gradient,
     required this.onTap,
   });
   final IconData icon;
   final String label;
-  final Color color;
+  final Gradient gradient;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         GestureDetector(
           onTap: onTap,
-          child: Container(
-            width: 60,
-            height: 60,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            width: 72,
+            height: 72,
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
+              gradient: gradient,
+              borderRadius: BorderRadius.circular(22),
+              boxShadow: isDark ? [] : [
+                BoxShadow(
+                  color: (gradient as LinearGradient).colors.first.withValues(alpha: 0.25),
+                  blurRadius: 18,
+                  offset: const Offset(0, 10),
+                ),
+              ],
             ),
-            child: Icon(icon, color: color, size: 26),
+            child: Icon(icon, color: Colors.white, size: 30),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         Text(
           label,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 12),
+          style: theme.textTheme.bodySmall?.copyWith(
+            fontWeight: FontWeight.w800,
+          ),
         ),
       ],
     );
   }
 }
+
