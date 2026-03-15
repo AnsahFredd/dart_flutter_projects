@@ -42,6 +42,8 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Column(
       children: [
         Expanded(
@@ -83,7 +85,7 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
                 width: isActive ? 24 : 8,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: isActive ? AppColors.primary : AppColors.divider,
+                  color: isActive ? AppColors.primary : (theme.brightness == Brightness.dark ? Colors.white24 : AppColors.divider),
                   borderRadius: BorderRadius.circular(4),
                 ),
               );

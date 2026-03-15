@@ -1,3 +1,4 @@
+import 'package:cliniq/core/routing/routes.dart';
 import 'package:cliniq/core/theme/app_colors.dart';
 import 'package:cliniq/core/theme/app_text.dart';
 import 'package:cliniq/features/appointments/domain/entities/appointment.dart';
@@ -13,14 +14,17 @@ class AppointmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
-        boxShadow: [
+        border: Border.all(color: isDark ? Colors.white12 : AppColors.border.withValues(alpha: 0.5)),
+        boxShadow: isDark ? [] : [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 20,
@@ -54,8 +58,8 @@ class AppointmentCard extends StatelessWidget {
                     errorBuilder: (_, __, ___) => Container(
                       width: 60,
                       height: 60,
-                      color: AppColors.surface,
-                      child: const Icon(Icons.person_rounded, color: AppColors.textHint),
+                      color: theme.colorScheme.surface,
+                      child: Icon(Icons.person_rounded, color: isDark ? Colors.white24 : AppColors.textHint),
                     ),
                   ),
                 ),
@@ -67,7 +71,7 @@ class AppointmentCard extends StatelessWidget {
                   children: [
                     Text(
                       appointment.doctorName,
-                      style: AppText.titleMedium.copyWith(fontWeight: FontWeight.bold),
+                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
                     ),
                     const SizedBox(height: 4),
                     Row(
@@ -76,9 +80,9 @@ class AppointmentCard extends StatelessWidget {
                         const SizedBox(width: 4),
                         Text(
                           appointment.speciality,
-                          style: AppText.subtitleSmall.copyWith(
+                          style: theme.textTheme.bodySmall?.copyWith(
                             color: AppColors.secondary,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
                       ],
@@ -86,7 +90,10 @@ class AppointmentCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       appointment.hospital,
-                      style: AppText.subtitleSmall,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: isDark ? Colors.white38 : AppColors.textSecondary,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
@@ -98,23 +105,23 @@ class AppointmentCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.surface2,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
-                const Icon(Icons.calendar_today_rounded, size: 14, color: AppColors.textSecondary),
+                const Icon(Icons.calendar_today_rounded, size: 14, color: AppColors.secondary),
                 const SizedBox(width: 6),
                 Text(
                   "${appointment.dateTime.day}/${appointment.dateTime.month}/${appointment.dateTime.year}",
-                  style: AppText.subtitleSmall.copyWith(fontWeight: FontWeight.w600),
+                  style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(width: 16),
-                const Icon(Icons.access_time_rounded, size: 14, color: AppColors.textSecondary),
+                const Icon(Icons.access_time_rounded, size: 14, color: AppColors.secondary),
                 const SizedBox(width: 6),
                 Text(
                   "${appointment.dateTime.hour}:${appointment.dateTime.minute.toString().padLeft(2, '0')}",
-                  style: AppText.subtitleSmall.copyWith(fontWeight: FontWeight.w600),
+                  style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w800),
                 ),
                 const Spacer(),
                 Container(
@@ -136,9 +143,9 @@ class AppointmentCard extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text(
                         appointment.type.label,
-                        style: AppText.subtitleSmall.copyWith(
+                        style: theme.textTheme.bodySmall?.copyWith(
                           color: AppColors.secondary,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w900,
                           fontSize: 10,
                         ),
                       ),
@@ -161,21 +168,43 @@ class AppointmentCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
-                    child: const Text("Cancel", style: TextStyle(fontWeight: FontWeight.bold)),
+                    child: const Text("Cancel", style: TextStyle(fontWeight: FontWeight.w800)),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (appointment.type == AppointmentType.videoCall) {
+                        Navigator.pushNamed(
+                          context,
+                          Routes.videoCall,
+                          arguments: {
+                            "name": appointment.doctorName,
+                            "image": appointment.image,
+                          },
+                        );
+                      } else {
+                        Navigator.pushNamed(
+                          context,
+                          Routes.bookAppointment,
+                          arguments: appointment,
+                        );
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.secondary,
+                      backgroundColor: appointment.type == AppointmentType.videoCall 
+                          ? AppColors.success 
+                          : AppColors.secondary,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       elevation: 0,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
-                    child: const Text("Reschedule", style: TextStyle(fontWeight: FontWeight.bold)),
+                    child: Text(
+                      appointment.type == AppointmentType.videoCall ? "Join Call" : "Reschedule",
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
                   ),
                 ),
               ],
@@ -185,4 +214,4 @@ class AppointmentCard extends StatelessWidget {
       ),
     );
   }
-}
+}

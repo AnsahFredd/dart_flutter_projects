@@ -128,4 +128,4 @@ class _AppointmentPageState extends State<AppointmentPage>
       appointments: appointments.where((a) => a.status == status).toList(),
     );
   }
-}
+}

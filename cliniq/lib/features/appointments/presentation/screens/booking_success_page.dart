@@ -11,8 +11,10 @@ class BookingSuccessPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -39,13 +41,18 @@ class BookingSuccessPage extends StatelessWidget {
               const SizedBox(height: 32),
               Text(
                 "Appointment Booked!",
-                style: AppText.headlineMedium.copyWith(fontWeight: FontWeight.bold),
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
               Text(
                 "Your appointment with ${appointment.doctorName} has been successfully booked.",
-                style: AppText.subtitleSmall.copyWith(color: AppColors.textSecondary),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: isDark ? Colors.white38 : AppColors.textSecondary,
+                  fontWeight: FontWeight.w600,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),
@@ -53,12 +60,14 @@ class BookingSuccessPage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: theme.colorScheme.surface,
                   borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: isDark ? Colors.white12 : AppColors.border),
                 ),
                 child: Column(
                   children: [
                     _buildSummaryItem(
+                      context,
                       Icons.calendar_today_rounded,
                       "Date",
                       "${appointment.dateTime.day}/${appointment.dateTime.month}/${appointment.dateTime.year}",
@@ -68,6 +77,7 @@ class BookingSuccessPage extends StatelessWidget {
                       child: Divider(height: 1, color: AppColors.border),
                     ),
                     _buildSummaryItem(
+                      context,
                       Icons.access_time_rounded,
                       "Time",
                       "${appointment.dateTime.hour}:${appointment.dateTime.minute.toString().padLeft(2, '0')}",
@@ -77,6 +87,7 @@ class BookingSuccessPage extends StatelessWidget {
                       child: Divider(height: 1, color: AppColors.border),
                     ),
                     _buildSummaryItem(
+                      context,
                       Icons.location_on_rounded,
                       "Type",
                       appointment.type.label,
@@ -101,7 +112,7 @@ class BookingSuccessPage extends StatelessWidget {
                 ),
                 child: const Text(
                   "Back to Home",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
                 ),
               ),
               const SizedBox(height: 16),
@@ -118,7 +129,7 @@ class BookingSuccessPage extends StatelessWidget {
                   "View My Appointments",
                   style: TextStyle(
                     color: AppColors.secondary,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w800,
                     fontSize: 16,
                   ),
                 ),
@@ -131,19 +142,26 @@ class BookingSuccessPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryItem(IconData icon, String label, String value) {
+  Widget _buildSummaryItem(BuildContext context, IconData icon, String label, String value) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Row(
       children: [
         Icon(icon, size: 20, color: AppColors.secondary),
         const SizedBox(width: 12),
         Text(
           label,
-          style: AppText.subtitleSmall.copyWith(color: AppColors.textSecondary),
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: isDark ? Colors.white38 : AppColors.textSecondary,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         const Spacer(),
         Text(
           value,
-          style: AppText.titleSmall.copyWith(fontWeight: FontWeight.bold),
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w900,
+          ),
         ),
       ],
     );

@@ -3,9 +3,14 @@ import 'package:cliniq/core/theme/app_text.dart';
 import 'package:flutter/material.dart';
 
 class SlotSelectorGrid extends StatefulWidget {
-  const SlotSelectorGrid({super.key, required this.onChanged});
+  const SlotSelectorGrid({
+    super.key, 
+    required this.onChanged,
+    this.initialTime,
+  });
 
   final ValueChanged<String> onChanged;
+  final String? initialTime;
 
   @override
   State<SlotSelectorGrid> createState() => _SlotSelectorGridState();
@@ -13,6 +18,12 @@ class SlotSelectorGrid extends StatefulWidget {
 
 class _SlotSelectorGridState extends State<SlotSelectorGrid> {
   String? selectedTime;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedTime = widget.initialTime;
+  }
 
   final List<String> timeSlots = [
     '09:00 AM', '09:30 AM', '10:00 AM',

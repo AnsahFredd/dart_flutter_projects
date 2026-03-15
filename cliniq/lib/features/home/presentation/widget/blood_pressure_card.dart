@@ -83,9 +83,9 @@ class BloodPressureCard extends StatelessWidget {
                 const SizedBox(width: 6),
                 Text(
                   "Normal",
-                  style: AppText.subtitleSmall.copyWith(
+                  style: theme.textTheme.bodySmall?.copyWith(
                     color: AppColors.success,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ],

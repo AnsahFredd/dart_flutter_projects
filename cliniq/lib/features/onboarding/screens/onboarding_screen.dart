@@ -24,12 +24,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -37,8 +40,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     onPressed: _onSkipPressed,
                     child: Text(
                       "SKIP",
-                      style: AppText.titleSmall.copyWith(
+                      style: theme.textTheme.titleSmall?.copyWith(
                         color: AppColors.secondary,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                   ),
@@ -56,14 +60,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(24),
+              padding: const EdgeInsets.all(24),
               child: ElevatedButton(
                 onPressed: _onNextPreesed,
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: AppColors.surface,
-                  backgroundColor: Colors.blue,
-                  padding: EdgeInsets.all(8.0),
-                  minimumSize: Size(double.infinity, 60),
+                  backgroundColor: AppColors.secondary,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.all(8.0),
+                  minimumSize: const Size(double.infinity, 60),
+                  elevation: isDark ? 0 : 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -75,13 +80,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       _currentPageIndex == totalPage - 1
                           ? "Get Started"
                           : "Next",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
-                    SizedBox(width: 8),
-                    Icon(Icons.arrow_forward, size: 22),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.arrow_forward_rounded, size: 22),
                   ],
                 ),
               ),

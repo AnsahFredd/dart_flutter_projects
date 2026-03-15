@@ -48,17 +48,17 @@ class UpcomingAppointmentCard extends StatelessWidget {
                     children: [
                       Text(
                         "Dr. Sarah Johnson",
-                        style: AppText.titleLarge.copyWith(
+                        style: theme.textTheme.titleMedium?.copyWith(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w900,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         "Cardiologist • City Clinic",
-                        style: AppText.subtitleSmall.copyWith(
-                          color: Colors.white.withValues(alpha: 0.8),
-                          fontWeight: FontWeight.w400,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],
@@ -122,9 +122,9 @@ class _InfoItem extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           label,
-          style: AppText.subtitleSmall.copyWith(
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: Colors.white,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w800,
           ),
         ),
       ],

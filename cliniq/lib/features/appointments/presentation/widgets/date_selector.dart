@@ -3,26 +3,31 @@ import 'package:cliniq/core/theme/app_text.dart';
 import 'package:flutter/material.dart';
 
 class DateSelector extends StatefulWidget {
-  const DateSelector({super.key, required this.onChanged});
+  const DateSelector({
+    super.key, 
+    required this.onChanged,
+    this.initialDate,
+  });
 
   final ValueChanged<DateTime> onChanged;
+  final DateTime? initialDate;
 
   @override
   State<DateSelector> createState() => _DateSelectorState();
 }
 
 class _DateSelectorState extends State<DateSelector> {
-  DateTime selectedDate = DateTime.now();
+  late DateTime selectedDate;
   late List<DateTime> dates;
 
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
+    selectedDate = widget.initialDate ?? DateTime.now();
     // Generate dates for the next 30 days
     dates = List.generate(
       30,
-      (i) => now.add(Duration(days: i)),
+      (i) => DateTime.now().add(Duration(days: i)),
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {

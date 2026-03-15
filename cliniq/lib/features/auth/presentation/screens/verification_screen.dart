@@ -31,8 +31,10 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FB),
       body: SafeArea(
         child: Column(
           children: [
@@ -43,10 +45,10 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 children: [
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.arrow_back_ios_new_rounded,
                       size: 20,
-                      color: Color(0xFF1A1A2E),
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -64,10 +66,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     // Title
                     Text(
                       "Verify Email",
-                      style: AppText.titleLarge.copyWith(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 28,
-                        color: const Color(0xFF1A1A2E),
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
                         letterSpacing: -0.5,
                       ),
                     ),
@@ -75,19 +75,17 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
                     // Subtitle
                     RichText(
-                      text: const TextSpan(
+                      text: TextSpan(
                         text: "We sent a 6-digit code to ",
-                        style: TextStyle(
-                          fontSize: 14.5,
-                          color: Color(0xFF6B7280),
-                          height: 1.55,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: isDark ? Colors.white38 : const Color(0xFF6B7280),
                         ),
                         children: [
                           TextSpan(
                             text: "your email address.",
                             style: TextStyle(
-                              color: Color(0xFF374151),
-                              fontWeight: FontWeight.w600,
+                              color: isDark ? Colors.white70 : const Color(0xFF374151),
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ],
@@ -114,33 +112,31 @@ class _VerificationScreenState extends State<VerificationScreen> {
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF1A1A2E),
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w900,
                               ),
                               decoration: InputDecoration(
                                 counterText: "",
                                 filled: true,
-                                fillColor: Colors.white,
+                                fillColor: theme.colorScheme.surface,
                                 contentPadding: EdgeInsets.zero,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(14),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xFFE8ECF0),
+                                  borderSide: BorderSide(
+                                    color: isDark ? Colors.white12 : const Color(0xFFE8ECF0),
                                     width: 1.5,
                                   ),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(14),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xFFE8ECF0),
+                                  borderSide: BorderSide(
+                                    color: isDark ? Colors.white12 : const Color(0xFFE8ECF0),
                                     width: 1.5,
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(14),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: AppColors.secondary,
                                     width: 2,
                                   ),
@@ -185,7 +181,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w900,
                             letterSpacing: 0.2,
                           ),
                         ),
@@ -201,16 +197,15 @@ class _VerificationScreenState extends State<VerificationScreen> {
                         child: RichText(
                           text: TextSpan(
                             text: "Didn't receive the code? ",
-                            style: const TextStyle(
-                              color: Color(0xFF9CA3AF),
-                              fontSize: 14,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: isDark ? Colors.white38 : const Color(0xFF9CA3AF),
                             ),
                             children: [
                               TextSpan(
                                 text: "Resend",
                                 style: TextStyle(
                                   color: AppColors.secondary,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w800,
                                   fontSize: 14,
                                 ),
                               ),

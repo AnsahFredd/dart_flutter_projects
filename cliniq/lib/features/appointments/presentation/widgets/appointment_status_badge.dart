@@ -34,9 +34,9 @@ class AppointmentStatusBadge extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
           fontSize: 10,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w900,
           color: color,
           letterSpacing: 0.5,
         ),

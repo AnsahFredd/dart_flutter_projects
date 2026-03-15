@@ -1,6 +1,7 @@
 import 'package:cliniq/core/theme/app_colors.dart';
 import 'package:cliniq/core/theme/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AppTheme {
   AppTheme._();
@@ -22,12 +23,23 @@ class AppTheme {
         outline: AppColors.border,
       ),
       textTheme: _textTheme(AppColors.textPrimary, AppColors.textSecondary),
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: true,
-        iconTheme: IconThemeData(color: AppColors.textPrimary),
-        titleTextStyle: AppText.titleLarge,
+        foregroundColor: AppColors.textPrimary,
+        iconTheme: const IconThemeData(color: AppColors.textPrimary),
+        titleTextStyle: AppText.titleLarge.copyWith(
+          color: AppColors.textPrimary,
+          fontWeight: FontWeight.w800,
+        ),
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+        ),
       ),
       dividerTheme: const DividerThemeData(
         color: AppColors.divider,
@@ -67,12 +79,23 @@ class AppTheme {
         outline: Colors.white12,
       ),
       textTheme: _textTheme(Colors.white, Colors.white70),
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-        titleTextStyle: AppText.titleLarge,
+        foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
+        titleTextStyle: AppText.titleLarge.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w800,
+        ),
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        ),
       ),
       dividerTheme: DividerThemeData(
         color: Colors.white.withValues(alpha: 0.1),

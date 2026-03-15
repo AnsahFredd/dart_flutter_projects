@@ -9,9 +9,12 @@ import 'package:cliniq/features/appointments/presentation/widgets/appointment_ty
 import 'package:cliniq/features/appointments/presentation/widgets/date_selector.dart';
 import 'package:cliniq/features/appointments/presentation/widgets/doctor_card_mini.dart';
 import 'package:cliniq/features/appointments/presentation/widgets/slot_selector_grid.dart';
+import 'package:cliniq/features/notifications/domain/entities/notification.dart';
+import 'package:cliniq/features/notifications/presentation/bloc/notification_cubit.dart';
 import 'package:cliniq/shared/widget/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class AppointmentsListPage extends StatefulWidget {
   const AppointmentsListPage({
@@ -21,6 +24,7 @@ class AppointmentsListPage extends StatefulWidget {
     required this.hospital,
     required this.image,
     required this.rating,
+    this.existingAppointment,
   });
 
   final String doctorName;
@@ -28,15 +32,26 @@ class AppointmentsListPage extends StatefulWidget {
   final String hospital;
   final String image;
   final String rating;
+  final Appointment? existingAppointment;
 
   @override
   State<AppointmentsListPage> createState() => _AppointmentsListPageState();
 }
 
 class _AppointmentsListPageState extends State<AppointmentsListPage> {
-  AppointmentType selectedType = AppointmentType.inPerson;
+  late AppointmentType selectedType;
   DateTime? selectedDate;
   String? selectedTime;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedType = widget.existingAppointment?.type ?? AppointmentType.inPerson;
+    selectedDate = widget.existingAppointment?.dateTime;
+    if (widget.existingAppointment != null) {
+      selectedTime = DateFormat('hh:mm a').format(widget.existingAppointment!.dateTime);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +95,7 @@ class _AppointmentsListPageState extends State<AppointmentsListPage> {
                     ),
                     const SizedBox(height: 16),
                     AppointmentTypeSelector(
+                      initialType: selectedType,
                       onChanged: (type) => setState(() => selectedType = type),
                     ),
                     const SizedBox(height: 30),
@@ -89,6 +105,7 @@ class _AppointmentsListPageState extends State<AppointmentsListPage> {
                     ),
                     const SizedBox(height: 16),
                     DateSelector(
+                      initialDate: selectedDate,
                       onChanged: (date) => setState(() => selectedDate = date),
                     ),
                     const SizedBox(height: 30),
@@ -98,6 +115,7 @@ class _AppointmentsListPageState extends State<AppointmentsListPage> {
                     ),
                     const SizedBox(height: 16),
                     SlotSelectorGrid(
+                      initialTime: selectedTime,
                       onChanged: (time) => setState(() => selectedTime = time),
                     ),
                   ],
@@ -153,6 +171,19 @@ class _AppointmentsListPageState extends State<AppointmentsListPage> {
               );
 
               context.read<AppointmentBloc>().add(BookAppointmentEvent(booked));
+              
+              // Trigger Notification
+              context.read<NotificationCubit>().addNotification(
+                NotificationEntity(
+                  id: booked.id,
+                  title: "Appointment Booked",
+                  message: "You have successfully booked an appointment with Dr. ${widget.doctorName}",
+                  time: "Just now",
+                  icon: Icons.check_circle_rounded,
+                  color: AppColors.success,
+                ),
+              );
+
               Navigator.pushReplacementNamed(
                 context, 
                 Routes.bookingSuccess,

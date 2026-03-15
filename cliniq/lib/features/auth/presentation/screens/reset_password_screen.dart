@@ -13,8 +13,10 @@ class ResetPasswordScreen extends StatefulWidget {
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FB),
       body: SafeArea(
         child: Column(
           children: [
@@ -23,10 +25,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.arrow_back_ios_new_rounded,
                       size: 20,
-                      color: Color(0xFF1A1A2E),
+                      color: theme.colorScheme.onSurface,
                     ),
                     onPressed: () => Navigator.pop(context),
                   ),
@@ -44,42 +46,34 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                     Text(
                       "Reset Password",
-                      style: AppText.titleLarge.copyWith(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 28,
-                        color: const Color(0xFF1A1A2E),
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
                         letterSpacing: -0.5,
                       ),
                     ),
                     const SizedBox(height: 10),
-                    const Text(
+                    Text(
                       "Enter your registered email address and we'll send you a verification code.",
-                      style: TextStyle(
-                        fontSize: 14.5,
-                        color: Color(0xFF6B7280),
-                        height: 1.55,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: isDark ? Colors.white38 : const Color(0xFF6B7280),
                       ),
                     ),
 
                     const SizedBox(height: 40),
 
-                    const Text(
+                    Text(
                       "Email Address",
-                      style: TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF374151),
-                        letterSpacing: 0.1,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: isDark ? Colors.white70 : const Color(0xFF374151),
                       ),
                     ),
                     const SizedBox(height: 10),
 
                     TextField(
                       keyboardType: TextInputType.emailAddress,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        color: Color(0xFF1A1A2E),
-                        fontWeight: FontWeight.w500,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
                       ),
                       decoration: InputDecoration(
                         prefixIcon: Padding(
@@ -91,34 +85,33 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           ),
                         ),
                         hintText: "example@gmail.com",
-                        hintStyle: const TextStyle(
-                          color: Color(0xFFB0B7C3),
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
+                        hintStyle: theme.textTheme.bodyLarge?.copyWith(
+                          color: isDark ? Colors.white24 : const Color(0xFFB0B7C3),
+                          fontWeight: FontWeight.w500,
                         ),
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: theme.colorScheme.surface,
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 18,
                           vertical: 18,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFE8ECF0),
+                          borderSide: BorderSide(
+                            color: isDark ? Colors.white12 : const Color(0xFFE8ECF0),
                             width: 1.5,
                           ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFE8ECF0),
+                          borderSide: BorderSide(
+                            color: isDark ? Colors.white12 : const Color(0xFFE8ECF0),
                             width: 1.5,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: AppColors.secondary,
                             width: 2,
                           ),
@@ -148,7 +141,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w900,
                             letterSpacing: 0.2,
                           ),
                         ),
@@ -157,22 +150,21 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                     const SizedBox(height: 28),
 
-                    Center(
+                     Center(
                       child: GestureDetector(
                         onTap: () => Navigator.pop(context),
                         child: RichText(
                           text: TextSpan(
                             text: "Remember your password? ",
-                            style: const TextStyle(
-                              color: Color(0xFF9CA3AF),
-                              fontSize: 14,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: isDark ? Colors.white38 : const Color(0xFF9CA3AF),
                             ),
                             children: [
                               TextSpan(
                                 text: "Log in",
                                 style: TextStyle(
                                   color: AppColors.secondary,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w800,
                                   fontSize: 14,
                                 ),
                               ),

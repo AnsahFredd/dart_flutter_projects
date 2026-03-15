@@ -15,6 +15,8 @@ class OnboardingPageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
       child: Column(
@@ -36,7 +38,9 @@ class OnboardingPageItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Text(
               title,
-              style: AppText.displayMedium,
+              style: theme.textTheme.displayMedium?.copyWith(
+                fontWeight: FontWeight.w900,
+              ),
               textAlign: TextAlign.center,
             ),
           ),
@@ -45,7 +49,9 @@ class OnboardingPageItem extends StatelessWidget {
 
           Text(
             subtitle,
-            style: AppText.subtitleMedium,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
             textAlign: TextAlign.center,
           ),
         ],

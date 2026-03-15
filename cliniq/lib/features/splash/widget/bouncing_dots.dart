@@ -59,9 +59,9 @@ class _BouncingDotsState extends State<BouncingDots>
                 margin: EdgeInsets.symmetric(horizontal: 5),
                 width: i == 2 ? 10 : 10,
                 height: i == 2 ? 10 : 10,
-                decoration: BoxDecoration(
-                  color: i == 2 ? AppColors.textOnPrimary : AppColors.surface,
-                shape: BoxShape.circle
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
                 ),
               ),
               );

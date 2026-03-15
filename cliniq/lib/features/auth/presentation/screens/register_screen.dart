@@ -163,7 +163,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               width: 24,
                               child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                             )
-                          : const Text("Create Account", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          : const Text("Create Account", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -278,12 +278,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             FaIcon(icon, size: 20, color: iconColor),
             const SizedBox(width: 10),
-            Text(label, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+            Text(label, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800)),
           ],
         ),
       ),
     );
   }
-}
-
 }

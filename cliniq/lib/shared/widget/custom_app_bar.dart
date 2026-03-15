@@ -20,6 +20,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -30,15 +33,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: IconButton(
                 onPressed: onLeftPressed ?? () => Navigator.pop(context),
                 style: IconButton.styleFrom(
-                  backgroundColor: AppColors.surface,
+                  backgroundColor: theme.colorScheme.surface,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                    side: const BorderSide(color: AppColors.border),
+                    side: BorderSide(color: isDark ? Colors.white12 : AppColors.border),
                   ),
                 ),
                 icon: Icon(
                   leftIconData, 
-                  color: leftIconColor ?? AppColors.textPrimary,
+                  color: leftIconColor ?? theme.colorScheme.onSurface,
                   size: 18,
                 ),
               ),
@@ -46,7 +49,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           : null,
       title: Text(
         title,
-        style: AppText.titleLarge.copyWith(fontWeight: FontWeight.w800),
+        style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
       ),
       centerTitle: true,
       actions: [

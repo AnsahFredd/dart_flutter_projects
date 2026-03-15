@@ -1,3 +1,4 @@
+import 'package:cliniq/core/routing/routes.dart';
 import 'package:cliniq/core/theme/app_colors.dart';
 import 'package:cliniq/core/theme/app_text.dart';
 import 'package:cliniq/shared/widget/custom_search.dart';
@@ -9,19 +10,21 @@ class MessagesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text("Messages"),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => Navigator.pushNamed(context, Routes.finddoctor),
             style: IconButton.styleFrom(
-              backgroundColor: AppColors.surface,
+              backgroundColor: theme.colorScheme.surface,
               padding: const EdgeInsets.all(10),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
-                side: const BorderSide(color: AppColors.border),
+                side: BorderSide(color: isDark ? Colors.white12 : AppColors.border),
               ),
             ),
             icon: const Icon(Icons.add_comment_rounded, color: AppColors.secondary, size: 20),
@@ -31,16 +34,16 @@ class MessagesScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const SizedBox(height: 8),
-          const CustomSearch(
+          SizedBox(height: 8),
+          CustomSearch(
             hintText: "Search messages...",
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              physics: const BouncingScrollPhysics(),
-              children: const [
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              physics: BouncingScrollPhysics(),
+              children: [
                 _ChatItem(
                   name: "Dr. Sarah Wilson",
                   lastMessage: "The blood test results look normal. I'll see you next week!",
@@ -109,7 +112,14 @@ class _ChatItem extends StatelessWidget {
         border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.1) : AppColors.border.withValues(alpha: 0.5)),
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: () => Navigator.pushNamed(
+          context,
+          Routes.chatDetail,
+          arguments: {
+            "name": name,
+            "imageUrl": imageUrl,
+          },
+        ),
         borderRadius: BorderRadius.circular(20),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -159,10 +169,10 @@ class _ChatItem extends StatelessWidget {
                         ),
                         Text(
                           time,
-                          style: AppText.subtitleSmall.copyWith(
+                          style: theme.textTheme.bodySmall?.copyWith(
                             fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textHint,
+                            fontWeight: FontWeight.w800,
+                            color: isDark ? Colors.white38 : AppColors.textHint,
                           ),
                         ),
                       ],
@@ -175,9 +185,11 @@ class _ChatItem extends StatelessWidget {
                             lastMessage,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: AppText.subtitleSmall.copyWith(
-                              color: unreadCount > 0 ? theme.colorScheme.onSurface : theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                              fontWeight: unreadCount > 0 ? FontWeight.bold : FontWeight.w500,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: unreadCount > 0 
+                                  ? theme.textTheme.titleMedium?.color 
+                                  : (isDark ? Colors.white38 : AppColors.textSecondary),
+                              fontWeight: unreadCount > 0 ? FontWeight.w800 : FontWeight.w600,
                             ),
                           ),
                         ),

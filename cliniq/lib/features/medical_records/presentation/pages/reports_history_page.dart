@@ -1,8 +1,10 @@
+import 'package:cliniq/core/routing/routes.dart';
 import 'package:cliniq/core/theme/app_colors.dart';
-import 'package:cliniq/core/theme/app_text.dart';
 import 'package:cliniq/features/medical_records/domain/entities/report.dart';
+import 'package:cliniq/features/medical_records/presentation/bloc/medical_record_cubit.dart';
 import 'package:cliniq/shared/widget/custom_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class ReportsHistoryPage extends StatefulWidget {
@@ -14,87 +16,65 @@ class ReportsHistoryPage extends StatefulWidget {
 
 class _ReportsHistoryPageState extends State<ReportsHistoryPage> {
   ReportType? selectedType;
-
-  final List<MedicalReport> mockReports = [
-    MedicalReport(
-      id: '1',
-      title: 'Blood Analysis',
-      doctorName: 'Dr. Michael Chen',
-      date: DateTime.now().subtract(const Duration(days: 2)),
-      type: ReportType.lab,
-    ),
-    MedicalReport(
-      id: '2',
-      title: 'Chest X-Ray',
-      doctorName: 'Dr. Sarah Wilson',
-      date: DateTime.now().subtract(const Duration(days: 5)),
-      type: ReportType.imaging,
-    ),
-    MedicalReport(
-      id: '3',
-      title: 'Antibiotics Prescription',
-      doctorName: 'Dr. James Lee',
-      date: DateTime.now().subtract(const Duration(days: 10)),
-      type: ReportType.prescription,
-    ),
-    MedicalReport(
-      id: '4',
-      title: 'COVID-19 Vaccine',
-      doctorName: 'MediCare Center',
-      date: DateTime.now().subtract(const Duration(days: 30)),
-      type: ReportType.vaccine,
-    ),
-  ];
+  String searchQuery = "";
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final filteredReports = selectedType == null
-        ? mockReports
-        : mockReports.where((r) => r.type == selectedType).toList();
+    return BlocBuilder<MedicalRecordCubit, MedicalRecordState>(
+      builder: (context, state) {
+        final filteredReports = state.reports.where((r) {
+          final matchesType = selectedType == null || r.type == selectedType;
+          final matchesSearch = r.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
+              r.doctorName.toLowerCase().contains(searchQuery.toLowerCase());
+          return matchesType && matchesSearch;
+        }).toList();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Medical Records"),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            style: IconButton.styleFrom(
-              backgroundColor: theme.colorScheme.surface,
-              padding: const EdgeInsets.all(10),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: BorderSide(color: isDark ? Colors.white12 : AppColors.border),
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Medical Records"),
+            actions: [
+              IconButton(
+                onPressed: () => Navigator.pushNamed(context, Routes.addMedicalRecord),
+                style: IconButton.styleFrom(
+                  backgroundColor: theme.colorScheme.surface,
+                  padding: const EdgeInsets.all(10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: BorderSide(color: isDark ? Colors.white12 : AppColors.border),
+                  ),
+                ),
+                icon: const Icon(Icons.add_circle_outline_rounded, color: AppColors.secondary, size: 20),
               ),
-            ),
-            icon: const Icon(Icons.file_upload_outlined, color: AppColors.secondary, size: 20),
+              const SizedBox(width: 16),
+            ],
           ),
-          const SizedBox(width: 16),
-        ],
-      ),
-      body: Column(
-        children: [
-          const SizedBox(height: 8),
-          const CustomSearch(
-            hintText: "Search reports...",
+          body: Column(
+            children: [
+              const SizedBox(height: 8),
+              CustomSearch(
+                hintText: "Search reports...",
+                onChanged: (val) => setState(() => searchQuery = val),
+              ),
+              const SizedBox(height: 24),
+              _buildCategoryFilter(),
+              const SizedBox(height: 20),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: filteredReports.length,
+                  itemBuilder: (context, index) {
+                    return _ReportCard(report: filteredReports[index]);
+                  },
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 24),
-          _buildCategoryFilter(),
-          const SizedBox(height: 20),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              physics: const BouncingScrollPhysics(),
-              itemCount: filteredReports.length,
-              itemBuilder: (context, index) {
-                return _ReportCard(report: filteredReports[index]);
-              },
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -222,7 +202,11 @@ class _ReportCard extends StatelessWidget {
         ],
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: () => Navigator.pushNamed(
+          context, 
+          Routes.medicalRecordDetails,
+          arguments: report,
+        ),
         borderRadius: BorderRadius.circular(20),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -266,8 +250,45 @@ class _ReportCard extends StatelessWidget {
                   ],
                 ),
               ),
-              IconButton(
-                onPressed: () {},
+              PopupMenuButton<String>(
+                onSelected: (val) {
+                  if (val == 'delete') {
+                    context.read<MedicalRecordCubit>().deleteReport(report.id);
+                  }
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: 'view',
+                    child: Row(
+                      children: [
+                        Icon(Icons.visibility_rounded, size: 20),
+                        SizedBox(width: 8),
+                        Text("View Report", style: TextStyle(fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'download',
+                    child: Row(
+                      children: [
+                        Icon(Icons.file_download_rounded, size: 20),
+                        SizedBox(width: 8),
+                        Text("Download PDF", style: TextStyle(fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuDivider(),
+                  const PopupMenuItem(
+                    value: 'delete',
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete_outline_rounded, color: AppColors.error, size: 20),
+                        SizedBox(width: 8),
+                        Text("Delete", style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w700)),
+                      ],
+                    ),
+                  ),
+                ],
                 icon: const Icon(Icons.more_vert_rounded),
               ),
             ],

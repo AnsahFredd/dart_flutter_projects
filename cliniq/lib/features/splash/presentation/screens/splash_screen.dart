@@ -55,7 +55,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("MediCare", style: AppText.displayLarge),
+                    Text(
+                      "MediCare", 
+                      style: AppText.displayLarge.copyWith(color: Colors.white),
+                    ),
                     Icon(
                       Icons.monitor_heart,
                       size: 48,
@@ -66,7 +69,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 const SizedBox(height: 8),
                 Text(
                   "Your health. Our Priority.",
-                  style: AppText.subtitleLarge,
+                  style: AppText.subtitleLarge.copyWith(
+                    color: Colors.white.withValues(alpha: 0.8),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),

@@ -1,86 +1,108 @@
 import 'package:cliniq/core/theme/app_colors.dart';
 import 'package:cliniq/core/theme/app_text.dart';
+import 'package:cliniq/features/notifications/presentation/bloc/notification_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NotificationsPage extends StatelessWidget {
   const NotificationsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: false,
         title: Text(
           "Notifications",
-          style: AppText.headlineSmall.copyWith(color: AppColors.textPrimary),
+          style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
         ),
         actions: [
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              "Mark all as read",
-              style: AppText.titleSmall.copyWith(color: AppColors.secondary),
+          if (context.watch<NotificationCubit>().state.notifications.isNotEmpty)
+            TextButton(
+              onPressed: () => _showClearConfirmation(context),
+              child: const Text(
+                "Clear all",
+                style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w800),
+              ),
             ),
-          ),
           const SizedBox(width: 8),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        children: [
-          _buildSectionHeader("Today"),
-          _NotificationItem(
-            icon: Icons.calendar_today_rounded,
-            color: Colors.blue,
-            title: "Appointment Reminder",
-            message: "Your appointment with Dr. Sarah is in 30 minutes.",
-            time: "32 m ago",
-            isUnread: true,
-          ),
-          _NotificationItem(
-            icon: Icons.medication_rounded,
-            color: Colors.orange,
-            title: "Medication Alert",
-            message: "It's time for your evening dose of Vitamin D.",
-            time: "2 h ago",
-            isUnread: true,
-          ),
-          const SizedBox(height: 20),
-          _buildSectionHeader("Yesterday"),
-          _NotificationItem(
-            icon: Icons.check_circle_rounded,
-            color: Colors.green,
-            title: "Lab Results Ready",
-            message: "Your blood test results from Monday are now available.",
-            time: "1 d ago",
-          ),
-          _NotificationItem(
-            icon: Icons.payment_rounded,
-            color: Colors.purple,
-            title: "Payment Successful",
-            message: "Your subscription for Premium Plan has been renewed.",
-            time: "1 d ago",
+      body: BlocBuilder<NotificationCubit, NotificationState>(
+        builder: (context, state) {
+          if (state.notifications.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.notifications_off_outlined, size: 64, color: AppColors.textHint.withValues(alpha: 0.3)),
+                  const SizedBox(height: 16),
+                  Text("No notifications yet", style: theme.textTheme.titleMedium?.copyWith(color: AppColors.textHint)),
+                ],
+              ),
+            );
+          }
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            itemCount: state.notifications.length,
+            itemBuilder: (context, index) {
+              final item = state.notifications[index];
+              return _NotificationItem(
+                id: item.id,
+                icon: item.icon,
+                color: item.color,
+                title: item.title,
+                message: item.message,
+                time: item.time,
+                isUnread: item.isUnread,
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  void _showClearConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Clear Notifications", style: TextStyle(fontWeight: FontWeight.bold)),
+        content: const Text("Are you sure you want to clear all notifications?"),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Cancel")),
+          TextButton(
+            onPressed: () {
+              context.read<NotificationCubit>().clearAll();
+              Navigator.pop(ctx);
+            },
+            child: const Text("Clear All", style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(ThemeData theme, String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16, top: 8),
       child: Text(
         title,
-        style: AppText.titleSmall.copyWith(color: AppColors.textHint, letterSpacing: 1),
+        style: theme.textTheme.titleSmall?.copyWith(
+          color: AppColors.textHint,
+          letterSpacing: 1,
+          fontWeight: FontWeight.w800,
+        ),
       ),
     );
   }
 }
 
 class _NotificationItem extends StatelessWidget {
+  final String id;
   final IconData icon;
   final Color color;
   final String title;
@@ -89,6 +111,7 @@ class _NotificationItem extends StatelessWidget {
   final bool isUnread;
 
   const _NotificationItem({
+    required this.id,
     required this.icon,
     required this.color,
     required this.title,
@@ -99,14 +122,21 @@ class _NotificationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isUnread ? AppColors.surface : Colors.white,
+        color: isUnread 
+            ? (isDark ? theme.colorScheme.secondary.withValues(alpha: 0.1) : AppColors.surface)
+            : theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isUnread ? AppColors.secondary.withValues(alpha: 0.1) : AppColors.border.withValues(alpha: 0.5),
+          color: isUnread 
+              ? AppColors.secondary.withValues(alpha: 0.2) 
+              : (isDark ? Colors.white12 : AppColors.border.withValues(alpha: 0.5)),
         ),
       ),
       child: Row(
@@ -128,23 +158,45 @@ class _NotificationItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      title,
-                      style: AppText.titleMedium.copyWith(fontWeight: FontWeight.bold, fontSize: 14),
+                    Expanded(
+                      child: Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w800, 
+                          fontSize: 14,
+                        ),
+                      ),
                     ),
                     Text(
                       time,
-                      style: AppText.subtitleSmall.copyWith(fontSize: 11, color: AppColors.textHint),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontSize: 11, 
+                        color: isDark ? Colors.white38 : AppColors.textHint,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Text(
                   message,
-                  style: AppText.subtitleSmall.copyWith(height: 1.4, color: AppColors.textSecondary),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    height: 1.4, 
+                    color: isDark ? Colors.white70 : AppColors.textSecondary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
+          ),
+          IconButton(
+            onPressed: () => context.read<NotificationCubit>().removeNotification(id),
+            icon: const Icon(Icons.close_rounded, size: 18),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+            color: isDark ? Colors.white24 : AppColors.textHint,
           ),
         ],
       ),

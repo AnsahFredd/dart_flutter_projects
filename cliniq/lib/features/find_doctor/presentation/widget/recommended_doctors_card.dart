@@ -1,3 +1,4 @@
+import 'package:cliniq/core/routing/routes.dart';
 import 'package:cliniq/core/theme/app_colors.dart';
 import 'package:cliniq/core/theme/app_text.dart';
 import 'package:cliniq/features/appointments/presentation/screens/appointments_list_page.dart';
@@ -32,19 +33,10 @@ class RecommendedDoctorsCard extends StatelessWidget {
         ],
       ),
       child: InkWell(
-        onTap: () => Navigator.push(
+        onTap: () => Navigator.pushNamed(
           context,
-          MaterialPageRoute(
-            builder: (_) => AppointmentsListPage(
-              doctorName: doctor.name,
-              speciality: doctor.role,
-              hospital: doctor.city,
-              image: doctor.profilePicture.isNotEmpty
-                  ? doctor.profilePicture
-                  : 'https://randomuser.me/api/portraits/lego/1.jpg',
-              rating: '4.8',
-            ),
-          ),
+          Routes.doctorDetails,
+          arguments: doctor,
         ),
         borderRadius: BorderRadius.circular(24),
         child: Padding(
@@ -122,7 +114,11 @@ class RecommendedDoctorsCard extends StatelessWidget {
                             const SizedBox(width: 4),
                             Text(
                               '(120 reviews)',
-                              style: AppText.subtitleSmall.copyWith(fontSize: 11, color: AppColors.textHint),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                fontSize: 11, 
+                                color: isDark ? Colors.white38 : AppColors.textHint,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ],
                         ),
@@ -164,9 +160,9 @@ class RecommendedDoctorsCard extends StatelessWidget {
                     ),
                     child: Text(
                       "Available",
-                      style: AppText.subtitleSmall.copyWith(
+                      style: theme.textTheme.bodySmall?.copyWith(
                         color: AppColors.success,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w900,
                         fontSize: 10,
                       ),
                     ),

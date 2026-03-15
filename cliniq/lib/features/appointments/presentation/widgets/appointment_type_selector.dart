@@ -3,9 +3,14 @@ import 'package:cliniq/features/appointments/domain/entities/appointment.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentTypeSelector extends StatefulWidget {
-  const AppointmentTypeSelector({super.key, required this.onChanged});
+  const AppointmentTypeSelector({
+    super.key, 
+    required this.onChanged,
+    this.initialType = AppointmentType.inPerson,
+  });
 
   final ValueChanged<AppointmentType> onChanged;
+  final AppointmentType initialType;
 
   @override
   State<AppointmentTypeSelector> createState() =>
@@ -13,7 +18,13 @@ class AppointmentTypeSelector extends StatefulWidget {
 }
 
 class _AppointmentTypeSelectorState extends State<AppointmentTypeSelector> {
-  AppointmentType selectedType = AppointmentType.inPerson;
+  late AppointmentType selectedType;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedType = widget.initialType;
+  }
 
   @override
   Widget build(BuildContext context) {

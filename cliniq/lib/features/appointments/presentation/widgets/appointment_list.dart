@@ -13,11 +13,18 @@ class AppointmentList extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.calendar_today_outlined, size: 56, color: Colors.grey.shade300),
+            Icon(
+              Icons.calendar_today_outlined, 
+              size: 56, 
+              color: Theme.of(context).brightness == Brightness.dark ? Colors.white12 : Colors.grey.shade300
+            ),
             const SizedBox(height: 12),
             Text(
               "No appointments here",
-              style: TextStyle(color: Colors.grey.shade400, fontSize: 15, fontWeight: FontWeight.w500),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).brightness == Brightness.dark ? Colors.white24 : Colors.grey.shade400,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ],
         ),

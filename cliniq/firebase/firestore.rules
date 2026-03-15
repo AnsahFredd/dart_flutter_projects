@@ -1,0 +1,54 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // User Profiles
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
+    }
+
+    // Medical Records
+    match /medical_records/{recordId} {
+      // Only the patient who owns the record can access it
+      allow read, write: if isAuthenticated() && request.auth.uid == resource.data.userId;
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId;
+    }
+
+    // Appointments
+    match /appointments/{appointmentId} {
+      // Patients can see their own appointments
+      // Doctors should also be able to see them (if we add doctor roles later)
+      allow read, write: if isAuthenticated() && (
+        request.auth.uid == resource.data.userId || 
+        request.auth.uid == resource.data.doctorId
+      );
+      allow create: if isAuthenticated();
+    }
+
+    // Doctors (Public readable list)
+    match /doctors/{doctorId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Only admin via backend/console
+    }
+
+    // Messages
+    match /chats/{chatId} {
+      allow read, write: if isAuthenticated() && request.auth.uid in resource.data.participants;
+      
+      match /messages/{messageId} {
+        allow read, write: if isAuthenticated() && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+      }
+    }
+  }
+}

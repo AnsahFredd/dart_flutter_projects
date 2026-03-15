@@ -52,8 +52,11 @@ class _FindDoctorState extends State<FindDoctor> {
                 ),
               ),
             ),
-            const CustomSearch(
+            CustomSearch(
               hintText: "Search doctor, speciality...",
+              onChanged: (query) {
+                context.read<FindDoctorBloc>().add(SearchDoctorsEvent(query));
+              },
             ),
             const SizedBox(height: 24),
             const DoctorCategoryFilter(),
